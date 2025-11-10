@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    button {
+        /* background-color: green; */
+    }
+    div {
+        height: 100px;
+        width: 100px;
+        background-color: pink;
+    }
+    form {
+        width: 200px;
+        padding: 1rem 0;
+        display: flex;
+        justify-content: left;
+        align-items: left;
+        text-align: left;
+        flex-direction: column;
+
+    }
+</style>
+<body>
+    <h2>EventListner in JavaScript</h2>
+    <button id="btn" classs="btn" ondblclick="console.log('Double click from html');">Click</button>
+    <div id="div">Example div for mouse hover and mouse leave event</div>
+    <input type="number" id="input-no">
+    <form action="">
+        Id:
+        <input type="number" placeholder="Enter Your Id">
+        Name:
+        <input type="text" placeholder="Enter Your Name">
+        Sem:
+        <input type="text" placeholder="Enter Your Sem">
+        <button class="submit-btn">Submit</button>
+    </form>
+</body>
+<script src="script.js"></script>
+</html>

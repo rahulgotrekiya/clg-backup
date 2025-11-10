@@ -1,0 +1,95 @@
+Use Following Tables: 
+(1)
+Employee_master(EmpCode , Emp_Name , Dept_Id, Emp_Address , DOB , Basic_Salary) 
+Department_master(Dept_Code ,Dept_Name) 
+
+Create a PL/ SQL block to prepare the salary slip for the employee in the following format, whose Employee Code is provided by the user. 
+
+Salary Slip for the month <current month and year> 
+Employee Code: <E102> Employee Name: <John Smith> 
+Department Name: <Finance> 
+----------------------------------------------------------------------------------------------------------------
+Basic Salary 		DA 		HRA 		Medical 		P.F. 
+_______________________________________________________________________ 
+------------------------------------------------------------------------------------------------------------------- 
+Total Salary : _____________ 
+
+
+
+Note: 
+HRA is 15% of basic salary 
+DA is 30% of basic salary 
+Medical is 1% of basic salary 
+P.F. is 10% of basic salary 
+Raise an exception if the record not found for the entered EmpCode. 
+
+
+DECLARE 
+    CURSOR cSal is SELECT empno, ename, sal, dname FROM EMP JOIN dept ON EMP.DEPTNO = dept.DEPTNO;
+    hra number(6,2);
+    da number(6,2);
+    medical number(6,2);
+    pf number(6,2);
+    totalSal number(6,2);
+BEGIN
+    FOR vCur IN cSal
+    LOOP
+        dbms_output.put_line('Salary Slip for the month ' || to_char(sysdate, 'Month'));
+        dbms_output.put('Employee Code: ' || vCur.empno);
+        dbms_output.put_line(' Employee Code: ' || vCur.empno);
+        dbms_output.put_line('Department Name: ' || vCur.dname);
+        dbms_output.put_line(lpad('-', 75, '-'));
+        dbms_output.put_line(rpad('Basic Salary', 15) || rpad('HRA', 15) || rpad('DA', 15) || rpad('Medical', 15) || rpad('P.F.', 15));
+        hra := vCur.sal * 0.15;
+        da := vCur.sal * 0.30;
+        medical := vCur.sal * 0.01;
+        pf := vCur.sal * 0.10;
+        totalSal := hra + da + medical - pf;
+        dbms_output.put_line(rpad(vCur.sal, 15) || rpad(da, 15) || rpad(hra, 15) || rpad(medical, 15) || rpad(pf, 15));
+        dbms_output.put_line(lpad('-', 75, '-'));
+        dbms_output.put_line('Total Salary : ' || totalSal);
+        dbms_output.put_line(' ');
+        dbms_output.put_line(' ');
+    END LOOP;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN 
+        dbms_output.put_line('No Records Found !!!');
+END;
+/
+
+(2)
+Use following tables are create a report as shown below. 
+
+supplier (sid, sname, contact) 
+parts (pid, pname, color, unit_rate) 
+catalog (sid, pid, qty) [primary key(sid,pid)] 
+
+Write a PLSQl Cursor to take a supplier’s name as an input from the user and prepare a report in the following format: 
+
+******************************************************************************** 
+PART ID 	PART NAME 		QUANTITY 	   UNIT 	PRICE 		TOTAL 
+******************************************************************************** 
+Grand Total: 
+
+Raise a user defined exception when the supplier’s name not found in the database table. 
+
+SELECT sid INTO v_sid
+FROM supplier
+WHERE sname = p_sname;
+
+DECLARE 
+    vSid supplier.S_ID%type;
+    CURSOR cReport(vSid supplier.S_ID%type) is SELECT p.PART_ID, p.PART_NAME, c.qty, p.unit_rate, (c.qty * p.unit_rate) AS total_price FROM catalog c JOIN parts p ON c.PART_ID = p.PART_ID WHERE c.S_ID = vSid;
+BEGIN
+    vSid := '&Supplier_ID';
+    FOR vCur IN cReport(vSid) LOOP
+        dbms_output.put_line(lpad('*', 75, '*'));
+        dbms_output.put_line(rpad('PART ID', 15) || rpad('PART NAME', 15) || rpad('QUANTITY', 15) || rpad('UNIT', 15) || rpad('PRICE', 15) || rpad('TOTAL', 15));
+        dbms_output.put_line(rpad(vCur.PART_ID, 15) || rpad(vCur.PART_NAME, 15) || rpad(vCur.qty, 15) || rpad(vCur.unit_rate, 15) || rpad(vCur.total_price, 15));
+        dbms_output.put_line(lpad('-', 75, '-'));
+    END LOOP;
+EXCEPTION 
+    WHEN NO_DATA_FOUND then
+        dbms_output.put_line('Wrong applicant Id !!!');
+END;
+/

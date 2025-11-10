@@ -1,0 +1,723 @@
+-- 
+# Notes
+
+### Those are use for >, <, >=, <=, !=
+$gt, $lt, $gte, $lte, $ne
+
+#### Example
+db.TEACHER_MASTER.find({Salary:{$gt: 100000}}).pretty()
+db.TEACHER_MASTER.find({Salary:{$gte: 100000}}).pretty()
+db.TEACHER_MASTER.find({Salary:{$ne: 100000}}).pretty()
+-- 
+1. Overview of current big data tools & technologies
+MongoDB:
+MongoDB overview, MongoDB installation
+MongoDB shell commands / queries: view all databases, create new database, drop
+existing database, view current database, and switch over to a given database, db. help(),
+display statistics of a given database, display current version of MongoDB server, display
+list of collections in current database.
+Create collection, drop collection, data types, insert document, update document, delete
+document
+
+=========================================================================================
+
+2. Create a new MongoDB database called “TEACHER”.
+Within “TEACHER” database, create a collection named “TEACHER_MASTER”.
+Assume an appropriate Schema consisting of fields like Name, Age, Subject(array),
+DOB, Gender, Salary, City
+
+--------------------------------------------------------------
+use TEACHER
+db.createCollection("TEACHER_MASTER")
+--------------------------------------------------------------
+
+1. Insert 7 documents into the above collection.
+2. Display Name, Subject, Gender and Salary.
+
+> db.TEACHER_MASTER.find({}, {Name: 1, Subject: 1, Gender: 1, Salary: 1, _id:0})
+{ "Name" : "Rahul", "Subject" : [ "English", "Hindi", "Gujarati" ], "Gender" : "male", "Salary" : 100000 }                            
+{ "Name" : "Anil", "Subject" : [ "Hindi" ], "Gender" : "male", "Salary" : 100000 }                                                    
+{ "Name" : "Priyanka", "Subject" : [ "Hindi", "English" ], "Gender" : "female", "Salary" : 40000 }                                    
+{ "Name" : "Darshan", "Subject" : [ "Hindi" ], "Gender" : "male", "Salary" : 40000 }                                                  
+{ "Name" : "Kartik", "Subject" : [ "English" ], "Gender" : "male", "Salary" : 20000 }                                                 
+{ "Name" : "Sachin", "Subject" : [ "PHP", "JavaScript" ], "Gender" : "male", "Salary" : 120000 }                                      
+{ "Name" : "Mahesh", "Subject" : [ "MongoDB", "OS" ], "Gender" : "male", "Salary" : 40000 }    
+
+--------------------------------------------------------------
+3. Display teacher, which are from the city “Ahmedabad”.
+
+> db.TEACHER_MASTER.find({City: "Ahemdabad"}, {Name:1, City: 1}).pretty()                                                           
+{ "_id" : 1, "Name" : "Rahul", "City" : "Ahemdabad" }                                                                                 
+{ "_id" : 2, "Name" : "Anil", "City" : "Ahemdabad" }                                                                                  
+{ "_id" : 3, "Name" : "Priyanka", "City" : "Ahemdabad" }                    
+
+--------------------------------------------------------------
+4. Display the teacher id, name, city and DOB.
+
+> db.TEACHER_MASTER.find({}, {Name: 1, City: 1, DOB: 1, _id: 0})                                                                      
+{ "Name" : "Rahul", "DOB" : "26 March 2005", "City" : "Ahemdabad" }                                                                   
+{ "Name" : "Anil", "DOB" : "1 January 1981", "City" : "Ahemdabad" }                                                                   
+{ "Name" : "Priyanka", "DOB" : "25 May 1999", "City" : "Ahemdabad" }                                                                  
+{ "Name" : "Darshan", "DOB" : "23 January 2000", "City" : "Botad" }                                                                   
+{ "Name" : "Kartik", "DOB" : "23 March 1975", "City" : "Bihar" }                                                                      
+{ "Name" : "Sachin", "DOB" : "23 January 2001", "City" : "Bhavnagar" }                                                                
+{ "Name" : "Mahesh", "DOB" : "25 May 1980", "City" : "Dhrangadhra" }     
+
+--------------------------------------------------------------
+5. Display the teachers whose gender is female and teach either “Hindi” or “English”
+subject.
+
+> db.TEACHER_MASTER.find({Gender : "female", Subject : {$in: [ "Hindi", "English" ]}})                                                
+{ "_id" : 3, "Name" : "Priyanka", "Age" : 25, "Subject" : [ "Hindi", "English" ], "DOB" : "25 May 1999", "Gender" : "female", "Salary" : 40000, "City" : "Ahemdabad" }                                                                                                      
+
+> db.TEACHER_MASTER.find({"Gender" : "female", 
+    $or: [ 
+        {Subject:"Hindi"},
+        {Subject: "English"}
+    ]
+}).pretty()
+
+{ "_id" : 3, "Name" : "Priyanka", "Age" : 25, "Subject" : [ "Hindi", "English" ], "DOB" : "25 May 1999", "Gender" : "female", "Salary" : 40000, "City" : "Ahemdabad" }
+
+--------------------------------------------------------------
+6. Update all those documents where name of teacher is “Anil” with the new value of subject as “English”.
+
+db.TEACHER_MASTER.update(
+    { Name: "Anil" },
+    {$set: { Subject: ["English"]}},
+    {multi: true}
+)
+
+--------------------------------------------------------------
+7. Delete data of all those teachers who were born after 1st January 1980.
+
+db.TEACHER_MASTER.remove({DOB: "1st January 1981"})
+--------------------------------------------------------------
+8. Remove field age.
+
+db.TEACHER_MASTER.update({_id:7}, {$unset: {Age: ""}})
+
+--------------------------------------------------------------
+9. Display the teachers that do not teach “English” subject and their salary is more than 30000.
+
+db.TEACHER_MASTER.find(
+    {
+        Subject: {$ne: "English"},
+        Salary: {$gt: 30000}
+    }
+)
+
+{ "_id" : 2, "Name" : "Anil", "Age" : 34, "Subject" : [ "Hindi" ], "DOB" : "1 January 1981", "Gender" : "male", "Salary" : 100000, "City" : "Ahemdabad" }                                                                                                                   
+{ "_id" : 4, "Name" : "Darshan", "Age" : 25, "Subject" : [ "Hindi" ], "DOB" : "23 January 2000", "Gender" : "male", "Salary" : 40000, "City" : "Botad" }                                                                                                                    
+{ "_id" : 6, "Name" : "Sachin", "Age" : 24, "Subject" : [ "PHP", "JavaScript" ], "DOB" : "23 January 2001", "Gender" : "male", "Salary" : 120000, "City" : "Bhavnagar" }                                                                                                    
+{ "_id" : 7, "Name" : "Mahesh", "Age" : 35, "Subject" : [ "MongoDB", "OS" ], "DOB" : "25 May 1980", "Gender" : "male", "Salary" : 40000, "City" : "Dhrangadhra" }                                                                                                           
+{ "_id" : 8, "Name" : "Mahila", "Age" : 35, "Subject" : [ "OS", "Gujarati" ], "DOB" : "25 May 1980", "Gender" : "male", "Salary" : 40000, "City" : "Dhrangadhra" }                                                                                                          
+{ "_id" : 9, "Name" : "Nancy", "Age" : 35, "Subject" : [ "OS", "Gujarati" ], "DOB" : "25 May 1980", "Gender" : "female", "Salary" : 40000, "City" : "Dhrangadhra" }    
+
+--------------------------------------------------------------
+10. Find all the teachers having gender “Male” and display salary for them.
+
+db.TEACHER_MASTER.find(
+    {
+        Gender: "male"
+    },
+    {
+        Name: 1,
+        Gender: 1,
+        Salary: 1
+    }
+)
+
+{ "_id" : 1, "Name" : "Rahul", "Gender" : "male", "Salary" : 100000 }                                                                 
+{ "_id" : 2, "Name" : "Anil", "Gender" : "male", "Salary" : 100000 }                                                                  
+{ "_id" : 4, "Name" : "Darshan", "Gender" : "male", "Salary" : 40000 }                                                                
+{ "_id" : 5, "Name" : "Kartik", "Gender" : "male", "Salary" : 20000 }                                                                 
+{ "_id" : 6, "Name" : "Sachin", "Gender" : "male", "Salary" : 120000 }                                                                
+{ "_id" : 7, "Name" : "Mahesh", "Gender" : "male", "Salary" : 40000 }                                                                 
+{ "_id" : 8, "Name" : "Mahila", "Gender" : "male", "Salary" : 40000 }      
+
+=========================================================================================
+
+3. Create a new MongoDB database called “EMPLOYEE”.
+Within “EMPLOYEE” database, create a collection named EMPLOYEE_MASTER”
+assume an appropriate schema consisting of fields like Empno, Name, Designation, DOJ,
+Department, Salary, Gender, Skills(array)
+
+use EMPLOYEE
+db.createCollection("EMPLOYEE_MASTER")
+
+--------------------------------------------------------------
+1. Insert 7 documents into the above collection.
+
+
+db.EMPLOYEE_MASTER.insertMany([
+    {   
+        _id: 1,
+        Empno: "E01",
+        Name: "Rahul",
+        Designations: "Engineer",
+        DOJ: "26 March 2005",
+        Department: "HR",
+        Salary: 100000,
+        Gender: "male",
+        Skills: ["JavaScript", "PHP", "Git/GitHub"]
+    },   
+    {   
+        _id: 2,
+        Empno: "E02",
+        Name: "Priyanka",
+        Designations: "Engineer",
+        DOJ: "25 May 2000",
+        Department: "HR",
+        Salary: 120000,
+        Gender: "female",
+        Skills: ["JavaScript", "WordPress"]
+    },
+    {   
+        _id: 3,
+        Empno: "E03",
+        Name: "Raj",
+        Designations: "Engineer",
+        DOJ: "1 December 1998",
+        Department: "HR",
+        Salary: 20000,
+        Gender: "Male",
+        Skills: ["Java", "PHP"]
+    },
+    {   
+        _id: 4,
+        Empno: "E04",
+        Name: "Raj",
+        Designations: "Engineer",
+        DOJ: "1 December 1998",
+        Department: "HR",
+        Salary: 20000,
+        Gender: "Male",
+        Skills: ["Java", "PHP"]
+    },
+    {   
+        _id: 5,
+        Empno: "E05",
+        Name: "Akash",
+        Designations: "HR",
+        DOJ: "25 May 2000",
+        Department: "HR",
+        Salary: 120000,
+        Gender: "female",
+        Skills: ["JavaScript", "WordPress"]
+    },
+    {   
+        _id: 6,
+        Empno: "E06",
+        Name: "Krish",
+        Designations: "Engineer",
+        DOJ: "1 January 1999",
+        Department: "HR",
+        Salary: 20000,
+        Gender: "Male",
+        Skills: ["Java", "PHP"]
+    },
+    {   
+        _id: 7,
+        Empno: "E07",
+        Name: "Amit",
+        Designations: "Accountant",
+        DOJ: "1 December 1998",
+        Department: "HR",
+        Salary: 20000,
+        Gender: "Male",
+        Skills: ["Java", "PHP"]
+    },
+    {   
+        _id: 7,
+        Empno: "E08",
+        Name: "Neha",
+        Designations: "Engineer",
+        DOJ: "1 December 1998",
+        Department: "HR",
+        Salary: 20000,
+        Gender: "female",
+        Skills: ["Java", "PHP"]
+    }
+])
+
+db.EMPLOYEE_MASTER.insert(
+    {   
+        _id: 8,
+        Empno: "E08",
+        Name: "Neha",
+        Designations: "Engineer",
+        DOJ: "1 December 1998",
+        Department: "dc",
+        Salary: 20000,
+        Gender: "female",
+        Skills: ["Java", "PHP"]
+    }
+)
+
+--------------------------------------------------------------
+2. Display Name, Department, Gender and Salary.
+
+db.EMPLOYEE_MASTER.find({}, {
+    Name: 1, 
+    Department: 1,
+    Gender: 1,
+    Salary: 1,
+    _id: 0 
+})
+
+{ "Name" : "Rahul", "Department" : "HR", "Salary" : 100000, "Gender" : "male" }
+{ "Name" : "Priyanka", "Department" : "HR", "Salary" : 120000, "Gender" : "female" }
+{ "Name" : "Raj", "Department" : "HR", "Salary" : 20000, "Gender" : "Male" }
+{ "Name" : "Raj", "Department" : "HR", "Salary" : 20000, "Gender" : "Male" }
+{ "Name" : "Akash", "Department" : "HR", "Salary" : 120000, "Gender" : "female" }
+{ "Name" : "Krish", "Department" : "HR", "Salary" : 20000, "Gender" : "Male" }
+{ "Name" : "Amit", "Department" : "HR", "Salary" : 20000, "Gender" : "Male" }
+
+--------------------------------------------------------------
+3. Display the list of employees from the department “HR”.
+
+db.EMPLOYEE_MASTER.find({Department: "HR"})
+
+{ "_id" : 1, "Empno" : "E01", "Name" : "Rahul", "Designations" : "Engineer", "DOJ" : "26 March 2005", "Department" : "HR", "Salary" : 100000, "Gender" : "male", "Skills" : [ "JavaScript", "PHP", "Git/GitHub" ] }                  
+{ "_id" : 2, "Empno" : "E02", "Name" : "Priyanka", "Designations" : "Engineer", "DOJ" : "25 May 2000", "Department" : "HR", "Salary" : 120000, "Gender" : "female", "Skills" : [ "JavaScript", "WordPress" ] } 
+{ "_id" : 3, "Empno" : "E03", "Name" : "Raj", "Designations" : "Engineer", "DOJ" : "1 December 1998", "Department" : "HR", "Salary" : 20000, "Gender" : "Male", "Skills" : [ "Java", "PHP" ] }
+{ "_id" : 4, "Empno" : "E04", "Name" : "Raj", "Designations" : "Engineer", "DOJ" : "1 December 1998", "Department" : "HR", "Salary" : 20000, "Gender" : "Male", "Skills" : [ "Java", "PHP" ] }
+{ "_id" : 5, "Empno" : "E05", "Name" : "Akash", "Designations" : "HR", "DOJ" : "25 May 2000", "Department" : "HR", "Salary" : 120000, "Gender" : "female", "Skills" : [ "JavaScript", "WordPress" ] }
+{ "_id" : 6, "Empno" : "E06", "Name" : "Krish", "Designations" : "Engineer", "DOJ" : "1 January 1999", "Department" : "HR", "Salary" : 20000, "Gender" : "Male", "Skills" : [ "Java", "PHP" ] }
+{ "_id" : 7, "Empno" : "E07", "Name" : "Amit", "Designations" : "Accountant", "DOJ" : "1 December 1998", "Department" : "HR", "Salary" : 20000, "Gender" : "Male", "Skills" : [ "Java", "PHP" ] }                                                                                                        >
+
+--------------------------------------------------------------
+4. Display the employee id, name, department and DOB.
+
+db.EMPLOYEE_MASTER.find({}, {
+    Empno: 1,
+    Name: 1, 
+    Department: 1,
+    DOB: 1,    
+    _id: 0 
+})
+
+{ "Empno" : "E01", "Name" : "Rahul", "Department" : "HR" }
+{ "Empno" : "E02", "Name" : "Priyanka", "Department" : "HR" }
+{ "Empno" : "E03", "Name" : "Raj", "Department" : "HR" }
+{ "Empno" : "E04", "Name" : "Raj", "Department" : "HR" }
+{ "Empno" : "E05", "Name" : "Akash", "Department" : "HR" }
+{ "Empno" : "E06", "Name" : "Krish", "Department" : "HR" }
+{ "Empno" : "E07", "Name" : "Amit", "Department" : "HR" }  
+
+--------------------------------------------------------------
+5. Display the employees whose gender is female and designation either “Engineer” or “Scientist”.
+
+db.EMPLOYEE_MASTER.find({Gender: "female", Designations: {$in: ["Engineer", "Scientist"]}})
+
+--------------------------------------------------------------
+6. Update all those documents where name of employee is “Akash” with the new value of designation as “Engineer”.
+
+db.EMPLOYEE_MASTER.update(
+    { Name: "Akash" },
+    {$set: { Designations: "Engineer"}},
+    {multi: true}
+)
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })    
+ 
+--------------------------------------------------------------
+7. Delete all those documents where DOJ is before 1st January 1999.
+
+db.EMPLOYEE_MASTER.remove({DOJ: "1 January 1999"})
+
+WriteResult({ "nRemoved" : 1 })  
+
+--------------------------------------------------------------
+8. Display the employees whose salary is greater than 25000 and have skills Java or PHP.
+
+
+db.EMPLOYEE_MASTER.find({Salary: {$gt: 25000}, Skills: {$in: ["Java", "PHP"]}}).pretty()
+
+{
+    "_id" : 1,
+    "Empno" : "E01",
+    "Name" : "Rahul",
+    "Designations" : "Engineer",
+    "DOJ" : "26 March 2005",
+    "Department" : "HR",
+    "Salary" : 100000,
+    "Gender" : "male",
+    "Skills" : [
+        "JavaScript",
+        "PHP",
+        "Git/GitHub"
+    ]
+}  
+
+--------------------------------------------------------------
+9. Find all the employees having designation “Engineer” and display salary for them.
+
+db.EMPLOYEE_MASTER.find({Designations: "Engineer"}, {_id: 0, Name: 1, Salary: 1})
+
+{ "Name" : "Neha", "Salary" :20000 }
+{ "Name" : "Rahul", "Salary" : 100000 }
+{ "Name" : "Priyanka", "Salary" : 120000 }
+{ "Name" : "Raj", "Salary" : 20000 }
+{ "Name" : "Raj", "Salary" : 20000 }
+{ "Name" : "Akash", "Salary" : 120000 }
+{ "Name" : "Neha", "Salary" : 20000 }      
+
+--------------------------------------------------------------
+10. Display only those documents where the name of employee is “Amit” and designation is “Accountant”.
+
+db.EMPLOYEE_MASTER.find(
+    { Name: "Amit", Designations: "Accountant"},    
+)
+
+
+db.TEACHER_MASTER.find(
+    {
+        Gender: "male"
+    },
+    {
+        Name: 1,
+        Gender: 1,
+        Salary: 1
+    }
+)
+
+=========================================================================================
+
+4. Create a Student Master database with a collection called “Student” containing
+documents with some or all of the following fields: StudentRollNo, StudentName,
+Grade, Hobbies, and DOJ.
+Perform the following operations on the database:
+
+use Student
+db.createCollection("Student")
+
+--------------------------------------------------------------
+a) Insert 10 Records in the database.
+
+db.Student.insertMany([
+    {_id: 1, StudentRollNo: 101, StudentName: "Rahul", Grade: "VII", Hobbies: "Typing", DOJ: "26/03/2020" },
+    {_id: 2, StudentRollNo: 102, StudentName: "Akhay", Grade: "IV", Hobbies: "Writing", DOJ: "26/04/2020" },
+    {_id: 3, StudentRollNo: 103, StudentName: "Mukesh", Grade: "IVV", Hobbies: "Music", DOJ: "26/06/2021" },
+    {_id: 4, StudentRollNo: 104, StudentName: "Jay", Grade: "IV", Hobbies: "Chess", DOJ: "26/03/2022" },
+    {_id: 5, StudentRollNo: 105, StudentName: "Ramesh", Grade: "IV++", Hobbies: "Dance", DOJ: "26/08/2022" },
+    {_id: 6, StudentRollNo: 106, StudentName: "Poojan", Grade: "VI",Hobbies: "Reading", DOJ: "26/03/2024" },
+    {_id: 7, StudentRollNo: 107, StudentName: "Sangeeta", Grade: "IVV",Hobbies: "Music", DOJ: "26/03/2023" },
+    {_id: 8, StudentRollNo: 108, StudentName: "Parth", Grade: "VI", Hobbies: "Chess", DOJ: "26/02/2021" },
+    {_id: 9, StudentRollNo: 109, StudentName: "Vihan", Grade: "IV", Hobbies: "Reading", DOJ: "26/03/2025" },
+    {_id: 10, StudentRollNo: 110, StudentName: "Sachin", Grade: "IV", Hobbies: "Typing", DOJ: "26/03/2019" }
+])
+
+--------------------------------------------------------------
+b) Find the document where in the “StudName” has value “Akhay”.
+
+db.Student.find({StudentName: "Akhay"})
+
+{ "_id" : 2, "StudentRollNo" : 102, "StudentName" : "Akhay", "Grade" : "IV", "Hobbies" : "Writing", "DOJ" : "26/04/2020" }                                              >
+--------------------------------------------------------------
+c) Find all documents in proper (like tabular) format. (Without _Id field)
+
+db.Student.find({}, {_Id: 0}).pretty()
+
+{
+        "_id" : 1,
+        "StudentRollNo" : 101,
+        "StudentName" : "Rahul",
+        "Grade" : "VII",
+        "Hobbies" : "Typing",
+        "DOJ" : "26/03/2020"
+}
+{
+        "_id" : 2,
+        "StudentRollNo" : 102,
+        "StudentName" : "Akhay",
+        "Grade" : "IV",
+        "Hobbies" : "Writing",
+        "DOJ" : "26/04/2020"
+}
+{
+        "_id" : 3,
+        "StudentRollNo" : 103,
+        "StudentName" : "Mukesh",
+        "Grade" : "IVV",
+        "Hobbies" : "Music",
+        "DOJ" : "26/06/2021"
+}
+{
+        "_id" : 4,
+        "StudentRollNo" : 104,
+        "StudentName" : "Jay",
+        "Grade" : "IV",
+        "Hobbies" : "Chess",
+        "DOJ" : "26/03/2022"
+}
+{
+        "_id" : 5,
+        "StudentRollNo" : 105,
+        "StudentName" : "Ramesh",
+        "Grade" : "IV++",
+        "Hobbies" : "Dance",
+        "DOJ" : "26/08/2022"
+}
+{
+        "_id" : 6,
+        "StudentRollNo" : 106,
+        "StudentName" : "Poojan",
+        "Grade" : "VI",
+        "Hobbies" : "Reading",
+        "DOJ" : "26/03/2024"
+}
+{
+        "_id" : 7,
+        "StudentRollNo" : 107,
+        "StudentName" : "Sangeeta",
+        "Grade" : "IVV",
+        "Hobbies" : "Music",
+        "DOJ" : "26/03/2023"
+}
+{
+        "_id" : 8,
+        "StudentRollNo" : 108,
+        "StudentName" : "Parth",
+        "Grade" : "VI",
+        "Hobbies" : "Chess",
+        "DOJ" : "26/02/2021"
+}
+{
+        "_id" : 9,
+        "StudentRollNo" : 109,
+        "StudentName" : "Vihan",
+        "Grade" : "IV",
+        "Hobbies" : "Reading",
+        "DOJ" : "26/03/2025"
+}
+{
+        "_id" : 10,
+        "StudentRollNo" : 110,
+        "StudentName" : "Sachin",
+        "Grade" : "IV",
+        "Hobbies" : "Typing",
+        "DOJ" : "26/03/2019"
+}
+--------------------------------------------------------------
+d) Retrieve only Student Name and Grade.
+
+db.Student.find({}, {StudentName: 1, Grade: 1, _id: 0})
+
+{ "StudentName" : "Rahul", "Grade" : "VII" }
+{ "StudentName" : "Akhay", "Grade" : "IV" }
+{ "StudentName" : "Mukesh", "Grade" : "IVV" }
+{ "StudentName" : "Jay", "Grade" : "IV" }
+{ "StudentName" : "Ramesh", "Grade" : "IV++" }
+{ "StudentName" : "Poojan", "Grade" : "VI" }
+{ "StudentName" : "Sangeeta", "Grade" : "IVV" }
+{ "StudentName" : "Parth", "Grade" : "VI" }
+{ "StudentName" : "Vihan", "Grade" : "IV" }
+{ "StudentName" : "Sachin", "Grade" : "IV" }
+
+--------------------------------------------------------------
+e) Retrieve Student Name and Grade of student who is having _id column is 1.
+
+db.Student.find({_id: 1}, {StudentName: 1, Grade: 1, _id: 0})
+
+{ "StudentName" : "Rahul", "Grade" : "VII" }
+
+--------------------------------------------------------------
+f) Add new field “Address” in Student collection.
+
+db.Student.update({}, {$set: {Address: ""}}, {multi: true})
+
+WriteResult({ "nMatched" : 10, "nUpserted" : 0, "nModified" : 10 })
+
+--------------------------------------------------------------
+g) Find those documents where the Grade is set to ‘VII’.
+
+db.Student.find({Grade: "VII"})
+
+--------------------------------------------------------------
+h) Find those documents where the Grade is not set to ‘VII’.
+
+db.Student.find({Grade: {$ne: "VII"}})
+
+{ "_id" : 1, "StudentRollNo" : 101, "StudentName" : "Rahul", "Grade" : "VII", "Hobbies" : "Typing", "DOJ" : "26/03/2020", "Address" : "" }
+{ "_id" : 2, "StudentRollNo" : 102, "StudentName" : "Akhay", "Grade" : "IV", "Hobbies" : "Writing", "DOJ" : "26/04/2020", "Address" : "" }
+{ "_id" : 3, "StudentRollNo" : 103, "StudentName" : "Mukesh", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/06/2021", "Address" : "" }
+{ "_id" : 4, "StudentRollNo" : 104, "StudentName" : "Jay", "Grade" : "IV", "Hobbies" : "Chess", "DOJ" : "26/03/2022", "Address" : "" }
+{ "_id" : 5, "StudentRollNo" : 105, "StudentName" : "Ramesh", "Grade" : "IV++", "Hobbies" : "Dance", "DOJ" : "26/08/2022", "Address" : "" }
+{ "_id" : 6, "StudentRollNo" : 106, "StudentName" : "Poojan", "Grade" : "VI", "Hobbies" : "Reading", "DOJ" : "26/03/2024", "Address" : "" }
+{ "_id" : 7, "StudentRollNo" : 107, "StudentName" : "Sangeeta", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/03/2023", "Address" : "" }
+{ "_id" : 8, "StudentRollNo" : 108, "StudentName" : "Parth", "Grade" : "VI", "Hobbies" : "Chess", "DOJ" : "26/02/2021", "Address" : "" }
+{ "_id" : 9, "StudentRollNo" : 109, "StudentName" : "Vihan", "Grade" : "IV", "Hobbies" : "Reading", "DOJ" : "26/03/2025", "Address" : "" }
+{ "_id" : 10, "StudentRollNo" : 110, "StudentName" : "Sachin", "Grade" : "IV", "Hobbies" : "Typing", "DOJ" : "26/03/2019", "Address" : "" }
+
+--------------------------------------------------------------
+i) Find those documents where the Hobbies is set to either ‘Chess’ or is set to
+‘Dancing”.
+
+db.Student.find({Hobbies: {$in: ["Chess", "Dance"]}})
+
+{ "_id" : 4, "StudentRollNo" : 104, "StudentName" : "Jay", "Grade" : "IV", "Hobbies" : "Chess", "DOJ" : "26/03/2022", "Address" : "" }
+{ "_id" : 5, "StudentRollNo" : 105, "StudentName" : "Ramesh", "Grade" : "IV++", "Hobbies" : "Dance", "DOJ" : "26/08/2022", "Address" : "" }
+{ "_id" : 8, "StudentRollNo" : 108, "StudentName" : "Parth", "Grade" : "VI", "Hobbies" : "Chess", "DOJ" : "26/02/2021", "Address" : "" }
+
+--------------------------------------------------------------
+j) Find those documents where the Hobbies is set neither to ‘Chess’ nor is set to
+‘Dancing”. 
+
+db.Student.find({$nor : [ {Hobbies: "Chess"}, {Hobbies: "Dance"}]})
+
+{ "_id" : 1, "StudentRollNo" : 101, "StudentName" : "Rahul", "Grade" : "IVV", "Hobbies" : "Typing", "DOJ" : "26/03/2020", "Address" : "" }
+{ "_id" : 2, "StudentRollNo" : 102, "StudentName" : "Akhay", "Grade" : "IV", "Hobbies" : "Writing", "DOJ" : "26/04/2020", "Address" : "" }
+{ "_id" : 3, "StudentRollNo" : 103, "StudentName" : "Mukesh", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/06/2021", "Address" : "" }
+{ "_id" : 6, "StudentRollNo" : 106, "StudentName" : "Poojan", "Grade" : "VI", "Hobbies" : "Reading", "DOJ" : "26/03/2024", "Address" : "" }
+{ "_id" : 7, "StudentRollNo" : 107, "StudentName" : "Sangeeta", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/03/2023", "Address" : "" }
+{ "_id" : 9, "StudentRollNo" : 109, "StudentName" : "Vihan", "Grade" : "IV", "Hobbies" : "Reading", "DOJ" : "26/03/2025", "Address" : "" }
+{ "_id" : 10, "StudentRollNo" : 110, "StudentName" : "Sachin", "Grade" : "IV", "Hobbies" : "Typing", "DOJ" : "26/03/2019", "Address" : "" }
+
+--------------------------------------------------------------
+k) Find those documents where the student name begins with ‘M’.
+
+db.Student.find({StudentName: /M/})
+
+{ "_id" : 3, "StudentRollNo" : 103, "StudentName" : "Mukesh", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/06/2021", "Address" : "" }
+
+// db.Student.find({StudentName: /^M/}) for starting
+
+--------------------------------------------------------------
+l) Find those documents where the student name has an “e” in any position.
+
+db.Student.find({StudentName: {$regex: "e", $options: "i"}})
+
+{ "_id" : 3, "StudentRollNo" : 103, "StudentName" : "Mukesh", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/06/2021", "Address" : "" }
+{ "_id" : 5, "StudentRollNo" : 105, "StudentName" : "Ramesh", "Grade" : "IV++", "Hobbies" : "Dance", "DOJ" : "26/08/2022", "Address" : "" }
+{ "_id" : 7, "StudentRollNo" : 107, "StudentName" : "Sangeeta", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/03/2023", "Address" : "" }
+--------------------------------------------------------------
+m) Find those documents where the student name ends in “a”.
+
+db.Student.find({StudentName: /a$/})
+
+{ "_id" : 7, "StudentRollNo" : 107, "StudentName" : "Sangeeta", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/03/2023", "Address" : "" }
+
+--------------------------------------------------------------
+n) Find total number of documents.
+
+db.Student.count()
+
+10
+
+--------------------------------------------------------------
+o) Find total number of documents where Grade is ‘VII’.
+
+db.Student.count({Grade: "VI"})
+
+2
+
+--------------------------------------------------------------
+p) Sort the documents in ascending order of student name.
+
+[Write 1 for ascending and -1 for descending ]
+
+db.Student.find().sort({StudentName: 1})
+
+{ "_id" : 2, "StudentRollNo" : 102, "StudentName" : "Akhay", "Grade" : "IV", "Hobbies" : "Writing", "DOJ" : "26/04/2020", "Address" : "" }
+{ "_id" : 4, "StudentRollNo" : 104, "StudentName" : "Jay", "Grade" : "IV", "Hobbies" : "Chess", "DOJ" : "26/03/2022", "Address" : "" }
+{ "_id" : 3, "StudentRollNo" : 103, "StudentName" : "Mukesh", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/06/2021", "Address" : "" }
+{ "_id" : 8, "StudentRollNo" : 108, "StudentName" : "Parth", "Grade" : "VI", "Hobbies" : "Chess", "DOJ" : "26/02/2021", "Address" : "" }
+{ "_id" : 6, "StudentRollNo" : 106, "StudentName" : "Poojan", "Grade" : "VI", "Hobbies" : "Reading", "DOJ" : "26/03/2024", "Address" : "" }
+{ "_id" : 1, "StudentRollNo" : 101, "StudentName" : "Rahul", "Grade" : "IVV", "Hobbies" : "Typing", "DOJ" : "26/03/2020", "Address" : "" }
+{ "_id" : 5, "StudentRollNo" : 105, "StudentName" : "Ramesh", "Grade" : "IV++", "Hobbies" : "Dance", "DOJ" : "26/08/2022", "Address" : "" }
+{ "_id" : 10, "StudentRollNo" : 110, "StudentName" : "Sachin", "Grade" : "IV", "Hobbies" : "Typing", "DOJ" : "26/03/2019", "Address" : "" }
+{ "_id" : 7, "StudentRollNo" : 107, "StudentName" : "Sangeeta", "Grade" : "IVV", "Hobbies" : "Music", "DOJ" : "26/03/2023", "Address" : "" }
+{ "_id" : 9, "StudentRollNo" : 109, "StudentName" : "Vihan", "Grade" : "IV", "Hobbies" : "Reading", "DOJ" : "26/03/2025", "Address" : "" }
+
+--------------------------------------------------------------
+q) Display the last two records.
+
+db.Student.find().sort({StudentRollNo: -1}).limit(2)
+
+{ "_id" : 10, "StudentRollNo" : 110, "StudentName" : "Sachin", "Grade" : "IV", "Hobbies" : "Typing", "DOJ" : "26/03/2019", "Address" : "" }
+{ "_id" : 9, "StudentRollNo" : 109, "StudentName" : "Vihan", "Grade" : "IV", "Hobbies" : "Reading", "DOJ" : "26/03/2025", "Address" : "" }
+
+--------------------------------------------------------------
+
+=========================================================================================
+
+5. Create a Movie_Maker database with a collection called “Movie“ containing
+documents with some or all of the following fields: titles, directors, years, actors.
+Perform the following operations on the database:
+a) Retrieve all documents.
+--------------------------------------------------------------
+b) Retrieve all documents with Director set to "Quentin Tarantino".
+--------------------------------------------------------------
+c) Retrieve all documents where actors include "Brad Pitt".
+--------------------------------------------------------------
+d) Retrieve all movies released before the year 2000 or after 2010.
+--------------------------------------------------------------
+e) Add a synopsis to "The Hobbit: An Unexpected Journey”: "A reluctant hobbit,
+Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves
+to reclaim their mountain home - and the gold within it - from the dragon
+Smaug."
+f) Add a synopsis to "The Hobbit: The Desolation of Smaug”: "The dwarves, along with
+Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their
+homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical
+ring."
+g) Add an actor named "Samuel L. Jackson" to the movie "Pulp Fiction"
+h) Find all movies that have a synopsis that contains the word "Bilbo".
+i) Find all movies that have a synopsis that contains the word "Gandalf".
+j) Find all movies that have a synopsis that contains the word "Bilbo" and not the word
+"Gandalf".
+k) Find all movies that have a synopsis that contains the word "dwarves" or
+"hobbit"
+l) Find all movies that have a synopsis that contains the word "gold" and "dragon".
+m) Delete the movie "Pee Wee Herman's Big Adventure"
+
+=========================================================================================
+
+6. Create “Mymenu” database with a collection called “Restaurants”, containing documents
+with some or all of the following fields: Restaurant Id, Restaurant Name, Grades (Note:
+An array is expected), Cuisine, Address (Note: Must include Building Name, Street,
+Area, City, ZipCode), and Date of Establishment (Note: Use Proper Date format), Score
+and Rating. Perform the following operations on the database. (Insert at least 10
+documents)
+
+use Mymenu
+db.createCollection("Restaurants")
+
+db.Restaurants.insertMany([
+{ "_id" : 1, "RestaurantId" : 1, "RestaurantName" : "Mirch Masala", "Grades" : [ "A", "A+" ], "Cuisine" : "Kitchen King", "Address" : [ { "BuildingName" : "Himalaya", "Street" : "Vastrapur","Area" : "Vastrapur Lake", "City" : "Ahmedabad", "ZipCode" : 380052 } ],"DateofEstablishment" : "1-Jan-2008", "Score" : 90, "Rating" : 4.9},
+{ "_id" : 2, "RestaurantId" : 2, "RestaurantName" : "Jassi De Parathe", "Grades" : [ "A" ], "Cuisine" : "Kitchen Masala", "Address" : [ { "BuildingName" : "Sarkhej", "Street" : "Maninagar", "Area" : "Kankaria Lake", "City" : "Ahmedabad", "ZipCode" : 380052 } ], "DateofEstablishment" : "1-Jan-2008", "Score" : 40, "Rating" : 3.9 },
+{ "_id" : 3, "RestaurantId" : 4, "RestaurantName" : "Nini's Kitchen", "Grades" : [ "A" ], "Cuisine" : "Multi Cuisine", "Address" : [ { "BuildingName" : "Saket-II", "Street" : "Abc", "Area" : "Science City", "City" : "Baroda", "ZipCode" : 380051 } ], "DateofEstablishment" : "1-Jan-2008", "Score" : 40, "Rating" : 3.9 },
+{ "_id" : 4, "RestaurantId" : 3, "RestaurantName" : "Barbeque Nation", "Grades" : [ "C" ], "Cuisine" : "Multi Cuisine", "Address" : [ { "BuildingName" : "Memnagar", "Street" : "Maninagar", "Area" : "Iskon", "City" : "Surat", "ZipCode" : 380052 } ], "DateofEstablishment" : "1-Jan-2008", "Score" : 40, "Rating" : 3.9 },
+{ "_id" : 5, "RestaurantId" : 5, "RestaurantName" : "Nini's Kitchen", "Grades" : [ "A" ], "Cuisine" : "Multi Cuisine", "Address" : [ { "BuildingName" : "Saket-II", "Street" : "Abc", "Area" : "Science City", "City" : "Baroda", "ZipCode" : 380051 } ], "DateofEstablishment" : "1-Jan-2024", "Score" : 40, "Rating" : 3.9 }])
+
+--------------------------------------------------------------
+1. Find the Restaurant Names, who have established after January 2010.
+
+
+
+--------------------------------------------------------------
+2. Find the restaurants that do not prepare Cuisine of “American”, and their Score is more
+than 70.
+
+db.Restaurant.find({
+    $and: [
+        {Cuisine: {$not: {$regex: "American", $options: "i"}}},
+        {Score: {$gt: 70}}
+    ]}
+)
+--------------------------------------------------------------
+3. Update the Rating of the restaurant “Mirch Masala”.
+--------------------------------------------------------------
+4. Display the restaurants, which are located in “Ahmedabad”.
+--------------------------------------------------------------
+5. Find the Restaurant Names and Cuisine, for those restaurants which contain ‘chen’
+(Example: “Kitchen”) as the last three letters.
+--------------------------------------------------------------
+6. Find the Restaurant Id’s and Restaurant Names of those restaurants, which are situated
+in “Ahmedabad” (City) but not in “ISKON” (Area).
+--------------------------------------------------------------
+7. Add a field “Borough” with value “Bronx”, for restaurants with _id: 3 and 4.
+--------------------------------------------------------------
+8. Remove the field Cuisine for restaurants whose name is “Jassi De Paratha”.
+Remove the document, with restaurant named “Barbeque Nation”.

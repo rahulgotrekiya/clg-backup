@@ -1,0 +1,80 @@
+1. Remove all Sales_Orders whose QtyOrdered = 1 in “Sales_Order_Details” table
+
+delete form Sales_Order_Details where QTY_ORDERED = 1;
+
+2. Modify the OrderStatus to “Fulfilled” where the OrderStatus is “In Process” in Sales_Order Table
+
+update sales_order set ORDER_STATUS = 'Fulfilled' where ORDER_STATUS = 'In Process';
+
+3. Increase the sell price of saree by Rs. 20
+
+update product_master set sell_p = sell_p + 20 where descr = 'Saree';
+
+4. Delete all Salesman from Salesman_Master table whose salary is more than 3500
+
+constant error
+
+5. Delete all Products from Product_master where Quantity on Hand (Qty_Hand) is less than 50
+
+delete from product_master where Qty_Hand < 50;
+
+6. Change the details of the Client ‘C003’ as pincode  to 387903 and Occupation is ‘Manager’
+
+update client_master set PINCODE = 387903, OCCUPATION = 'Manager' where C_NO = 'C003';
+
+7. Remove the product details column from Product_Master Table
+
+alter table Product_Master add(details varchar(20));
+alter table Product_Master drop column details;
+
+8. Add column City and State in Client_Master table
+
+alter table Client_Master add(City varchar(20), State varchar(20));
+
+9. Increase the size of the Price Column
+
+alter table item modify(price number(9,2));
+
+10. Add a column Mobile_No of type Number, in the Client_Master Table
+
+alter table Client_Master add(Mobile_No number(10));
+
+11. Add constraint to the Mobile_No column
+
+alter table Client_Master add CONSTRAINT CosCheck CHECK(LENGTH(TO_CHAR(Mobile_No)) = 10);
+
+12. Change the name of Salesman_Master table to “SMan_Mst”
+
+RENAME Salesman_Master TO SMan_Mst;
+
+13. Add a column of Experience in the Faculty_Master Table
+
+ALTER TABLE Faculty add Experience number(2);
+
+14. Change the name of the column Address to Area in Faculty_Master Table
+
+ALTER TABLE FACULTY RENAME column Address to area;
+
+15. Modify the Applicant Table name to Applicant_Master
+
+RENAME APPLICANT TO APPLICANT_MASTER;
+
+16. Add a column “Hobby” in Applicant_Master table.
+
+ALTER TABLE APPLICANT_MASTER ADD(HOBBY VARCHAR(50));
+
+17. Add a column “Location” in the “ETest_Detail” table. Keep it varchar(10)
+
+ALTER TABLE ETest_Details add location varchar(10);
+
+18. Modify the column “Location” and increase the size upto 25 characters.
+
+ALTER TABLE ETest_Details MODIFY location varchar(25);
+
+19. Change the field “Address” to “City” in Applicant_Master Table
+
+ALTER TABLE APPLICANT_MASTER RENAME COLUMN ADDRESS TO CITY;
+
+20. Change the name of the Item table to “Item_Master”
+
+

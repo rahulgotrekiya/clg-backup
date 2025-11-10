@@ -1,0 +1,207 @@
+
+Use Following Tables and solve given queries: 
+
+STUDENT (rollno, fname, lname, dob) 
+Course(C_No, coursename, fees, Credit) 
+Enroll (rollno, courseno, Earn_Credit) 
+
+create table student (
+	rollno number(2) primary key,
+	fname varchar(20),
+	lname varchar(20),
+	dob date
+);
+
+INSERT INTO STUDENT VALUES (12, 'Deepika', 'Padukone', '05-JAN-1994');
+INSERT INTO STUDENT VALUES (13, 'Ranveer', 'Singh', '06-JUL-1993');
+INSERT INTO STUDENT VALUES (14, 'Alia', 'Bhatt', '15-MAR-1996');
+INSERT INTO STUDENT VALUES (15, 'Virat', 'Kohli', '05-NOV-1990');
+
+create table course(
+	C_No Varchar (4) primary key check(C_No like 'C%'),	
+	coursename varchar(10),
+	fees number(8,2),
+	Credit number(1)
+);
+
+
+Insert into course values
+('C101', 'MCA', 75000, 8);
+Insert into course values
+('C102', 'BCA', 50000, 4);
+Insert into course values
+('C103', 'BCOM', 20000, 5);
+Insert into course values
+('C104', 'MSci', 200000, 4);
+Insert into course values
+('C105', 'BBA', 10000, 6);
+
+CREATE TABLE Enroll (
+    rollno NUMBER,
+    courseno VARCHAR2(10),
+    Earn_Credit NUMBER,
+    FOREIGN KEY (rollno) REFERENCES STUDENT(rollno),
+    FOREIGN KEY (courseno) REFERENCES Course(C_No)
+);
+
+INSERT INTO Enroll VALUES (11, 'C101', 4);
+INSERT INTO Enroll VALUES (11, 'C102', 4);
+INSERT INTO Enroll VALUES (12, 'C101', 4);
+INSERT INTO Enroll VALUES (13, 'C102', 3);
+INSERT INTO Enroll VALUES (13, 'C103', 3);
+INSERT INTO Enroll VALUES (14, 'C101', 4);
+
+
+
+1.	Display the name of students who have enrolled for course ‘C101’.
+
+SELECT fname, lname FROM STUDENT WHERE rollno IN (
+	SELECT rollno FROM Enroll WHERE courseno = 'C101'
+);
+
+2.	Display the name of the courses in which rollno 11 is enrolled.
+
+SELECT COURSENAME FROM COURSE WHERE C_NO IN (SELECT COURSENO FROM ENROLL WHERE ROLLNO = 11);
+
+3.	Display the name of the student who have earned maximum credit.
+
+SELECT FNAME FROM STUDENT STU,
+	(SELECT ROLLNO,SUM(EARN_CREDIT) FROM ENROLL GROUP BY ROLLNO HAVING SUM(EARN_CREDIT) 
+	= (SELECT MAX(SUM(EARN_CREDIT)) FROM ENROLL GROUP BY ROLLNO)) t1 WHERE STU.ROLLNO = t1.ROLLNO;
+
+4.	Display details of students who have enrolled in any course.
+
+SELECT * FROM STUDENT WHERE ROLLNO IN
+	(SELECT ROLLNO FROM STUDENT WHERE ROLLNO IN
+	(SELECT ROLLNO FROM ENROLL));
+
+5.	Display details of students who have not enrolled in any course.
+
+SELECT * FROM STUDENT WHERE ROLLNO IN
+	(SELECT ROLLNO FROM STUDENT WHERE ROLLNO NOT IN
+	(SELECT ROLLNO FROM ENROLL));
+
+6.	Display details of students who have enrolled in all courses.
+
+
+INSERT INTO Enroll VALUES (15, 'C101', 4);
+INSERT INTO Enroll VALUES (15, 'C102', 4);
+INSERT INTO Enroll VALUES (15, 'C103', 4);
+INSERT INTO Enroll VALUES (15, 'C104', 4);
+INSERT INTO Enroll VALUES (15, 'C105', 4);
+
+
+SELECT * FROM STUDENT WHERE not exists
+	(SELECT ROLLNO FROM COURSE WHERE ROLLNO NOT IN
+	(SELECT ROLLNO FROM ENROLL 
+	WHERE ENROLL.ROLLNO = STUDENT.ROLLNO));
+
+7.	Give the name of the course in which maximum number of students are enrolled.
+
+SELECT coursename FROM course WHERE C_no IN (
+	SELECT coursename FROM ENROLL GROUP BY courseno HAVING COUNT(*) = (
+		SELECT MAX(COUNT(*)) FROM Enroll GROUP BY courseno
+	) 
+);
+
+8.	Give the name of the course in which no student has enrolled
+
+SELECT COURSENAME FROM COURSE WHERE C_NO NOT IN (SELECT COURSENO FROM ENROLL);
+
+9.	Find all students whose credit earned is higher than the average credit of the students in their course.(using corelate sub query)
+
+SELECT * FROM ENROLL en WHERE EARN_CREDIT > (
+	SELECT AVG(Earn_Credit) FROM enroll  WHERE courseno = en.courseno
+);
+
+10.	List the student detail whose total credit is same as that of ‘Kapil‘
+
+SELECT * FROM student WHERE rollno IN (
+  	SELECT rollno FROM enroll GROUP BY rollno HAVING SUM(Earn_Credit) = (
+   		SELECT SUM(Earn_Credit) FROM enroll WHERE rollno in (
+      		SELECT rollno FROM student WHERE fname = 'Kapil' and lname = 'Shah'
+    	)
+  	)
+);
+
+
+Employee (emp_no, fname, lname, dob,address) 
+Company(comp_id,emp_no,company_name,salary,department,designation) 
+Customer(cust_no,fname,lname,address) 
+
+CREATE TABLE Employee (
+    emp_no NUMBER PRIMARY KEY,
+    fname VARCHAR2(50),
+    lname VARCHAR2(50),
+    dob DATE,
+    address VARCHAR2(100)
+);
+
+
+CREATE TABLE Company (
+    comp_id NUMBER PRIMARY KEY,
+    emp_no NUMBER,
+    company_name VARCHAR2(100),
+    salary NUMBER,
+    department VARCHAR2(50),
+    designation VARCHAR2(50),
+    FOREIGN KEY (emp_no) REFERENCES Employee(emp_no)
+);
+
+CREATE TABLE Customer (
+    cust_no NUMBER PRIMARY KEY,
+    fname VARCHAR2(50),
+    lname VARCHAR2(50),
+    address VARCHAR2(100)
+);
+
+INSERT INTO Customer VALUES('C1', 'Jay', 'Patel', 'DDAD 23 PARK');
+INSERT INTO Customer VALUES('C2', 'Aarti', 'Pandit', '23 PARK');
+
+
+
+1. Find all students whose salary is higher than the average salary of the employees in their departments. 
+
+SELECT e.emp_no, e.fname, c.department, c.salary FROM Employee e
+JOIN Company c ON e.emp_no = c.emp_no
+WHERE c.salary > (
+	SELECT AVG(c2.salary)
+	FROM Company c2
+	WHERE c2.department = c.department
+);
+
+2. List the employee detail whose salary is same as “Jay”. 
+
+INSERT INTO Employee VALUES('E6', 'Jay', 'Patel', DATE '2000-08-22', 'DDAD 23 PARK');
+INSERT INTO Company VALUES('C3', 'E6', 'MAKR', 2000, 'MARKETING', 'ASSISTANT MNGR');
+
+SELECT * FROM employee WHERE emp_no IN (
+	SELECT emp_no FROM Company WHERE salary = (
+		SELECT salary FROM company  WHERE emp_no = (
+			SELECT emp_no FROM employee WHERE fname = 'Jay'
+		)
+	)
+); 
+
+3. Display the name of employees who work in ‘mrkt’ department. 
+
+INSERT INTO Company VALUES('C4', 'E5', 'MAKResult', 2000, 'mrkt', 'ASSISTANT MNGR');
+
+SELECT fname FROM employee WHERE emp_no IN (
+	SELECT emp_no FROM company WHERE department = 'mrkt'
+);
+
+4. Display details of employees not belong to any department. 
+
+INSERT INTO Company VALUES('C5', 'E2', 'Result', 200, '', 'ASSISTANT MNGR');
+
+SELECT * FROM employee WHERE emp_no IN (
+	SELECT emp_no FROM company WHERE department IS NULL
+);
+
+5. Find out all the customers having same name as the employees. (Using multi column 
+subquery). 
+
+SELECT * FROM customer WHERE fname IN (
+	SELECT fname FROM employee
+);

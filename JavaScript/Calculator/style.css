@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    flex-direction: column;
+}
+
+button {
+    width: 2rem;
+    height: 2rem;
+    margin: 0 0.5rem 0 0.5rem;
+}
+
+input {
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid grey;
+    height: 3rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-style: bold;
+    font-size: 2rem;
+}
+
+h1 {
+    margin: 20px 0 20px;
+}
+
+#answer {
+    border: none;
+   
+}
