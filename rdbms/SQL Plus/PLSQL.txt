@@ -5,7 +5,7 @@ set serveroutput on;
 DECLARE
     n number(3);
 BEGIN
-    n := &lodu_size;
+    n := &test;
     if MOD(n,2) = 0 then
         dbms_output.put_line(n || ' is Even');
     else
