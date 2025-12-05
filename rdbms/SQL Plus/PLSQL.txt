@@ -5,7 +5,7 @@ set serveroutput on;
 DECLARE
     n number(3);
 BEGIN
-    n := &test;
+    n := &no;
     if MOD(n,2) = 0 then
         dbms_output.put_line(n || ' is Even');
     else
@@ -137,7 +137,6 @@ BEGIN
     dbms_output.put_line('| Emp No | eName | Salary');
     FOR vCur in curEmp
     LOOP
-        -- FETCH curEmp INTO vNo, vName, vSal;
         dbms_output.put_line( ' | ' || vCur.empno || ' | ' ||vCur.ename || ' | ' || vCur.sal);
     END LOOP;
 END;

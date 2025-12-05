@@ -3,6 +3,33 @@ Use Following Tables:
 Employee_master(EmpCode , Emp_Name , Dept_Id, Emp_Address , DOB , Basic_Salary) 
 Department_master(Dept_Code ,Dept_Name) 
 
+CREATE TABLE Department_master (
+    Dept_Code NUMBER PRIMARY KEY,
+    Dept_Name VARCHAR2(50)
+);
+
+CREATE TABLE Employee_master (
+    EmpCode NUMBER PRIMARY KEY,
+    Emp_Name VARCHAR2(100),
+    Dept_Id NUMBER REFERENCES Department_master(Dept_Code),
+    Emp_Address VARCHAR2(200),
+    DOB DATE,
+    Basic_Salary NUMBER
+);
+
+INSERT INTO Department_master VALUES (10, 'HR');
+INSERT INTO Department_master VALUES (20, 'Finance');
+INSERT INTO Department_master VALUES (30, 'IT');
+INSERT INTO Department_master VALUES (40, 'Marketing');
+
+INSERT INTO Employee_master VALUES (1001, 'Rahul Sharma', 30, 'Mumbai', DATE '1995-04-12', 45000);
+INSERT INTO Employee_master VALUES (1002, 'Aditi Patel', 20, 'Ahmedabad', DATE '1998-11-05', 52000);
+INSERT INTO Employee_master VALUES (1003, 'Karan Singh', 10, 'Delhi', DATE '1990-03-22', 60000);
+INSERT INTO Employee_master VALUES (1004, 'Meera Iyer', 30, 'Chennai', DATE '1997-07-18', 48000);
+INSERT INTO Employee_master VALUES (1005, 'Vikas Nair', 40, 'Bengaluru', DATE '1992-01-30', 55000);
+
+
+
 Create a PL/ SQL block to prepare the salary slip for the employee in the following format, whose Employee Code is provided by the user. 
 
 Salary Slip for the month <current month and year> 

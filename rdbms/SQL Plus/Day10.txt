@@ -96,5 +96,42 @@ END;
 /
 
 2. Write a PLSQL block to display all the Product’s details which are not ordered yet.
+
+DECLARE
+    CURSOR c1 IS
+        SELECT Prod_ID, Prod_Name, Price
+        FROM PRODUCTS
+        WHERE Prod_ID NOT IN (
+            SELECT Prod_ID FROM ORDER_DETAILS_PLSQL
+        );
+BEGIN
+    FOR p IN c1 LOOP
+        DBMS_OUTPUT.PUT_LINE(
+            'ID: ' || p.Prod_ID ||
+            ' Name: ' || p.Prod_Name ||
+            ' Price: ' || p.Price
+        );
+    END LOOP;
+END;
+/
+
+
 3. Update the Products table for Product_Name, if the name does not begin with a capital letter, then make it capital for a specific product ID, given by the User.
 
+DECLARE
+    v_id NUMBER := &ProductID;
+    v_name VARCHAR2(100);
+BEGIN
+    SELECT Prod_Name INTO v_name
+    FROM PRODUCTS
+    WHERE Prod_ID = v_id;
+
+    v_name := UPPER(SUBSTR(v_name,1,1)) || LOWER(SUBSTR(v_name,2));
+
+    UPDATE PRODUCTS
+    SET Prod_Name = v_name
+    WHERE Prod_ID = v_id;
+
+    DBMS_OUTPUT.PUT_LINE('Updated Name = ' || v_name);
+END;
+/
