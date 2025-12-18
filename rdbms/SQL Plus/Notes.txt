@@ -1,0 +1,12 @@
+Date: 21/08/2025
+
+update 	 -> 	Change the date in the table 
+alter 	 -> 	Change the structure of the table
+delete 	 -> 	Delete record from the table
+drop 	 ->	Delete/Remove table
+truncate ->	Delete/Remove table records from the table which can't rollback
+rollback ->	undo
+
+----------------------------------------------------------------------
+
+Date: /08/2025
