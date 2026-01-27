@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Horizontal Accordion</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <style>
+    .tables {
+      display: flex;
+      gap: 10px;
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tab {
+      cursor: pointer;
+      background: #0f0f0f;
+      color: white;
+    }
+
+    .panel {
+      margin-top: 10px;
+      text-align: center;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .month-btn {
+      background: #f0f0f0;
+      cursor: pointer;
+    }
+
+    .month.active {
+      background: yellow;
+      color: black;
+    }
+  </style>
+  <body>
+    <div class="tables">
+      <div class="item">
+        <button class="tab" data-num="3">Table 3</button>
+        <div class="panel"></div>
+      </div>
+
+      <div class="item">
+        <button class="tab" data-num="4">Table 4</button>
+        <div class="panel"></div>
+      </div>
+
+      <div class="item">
+        <button class="tab" data-num="5">Table 5</button>
+        <div class="panel"></div>
+      </div>
+    </div>
+
+    <div class="list">
+      <div class="row">
+        <button class="month-btn">Select</button>
+        <p class="month">January</p>
+      </div>
+
+      <div class="row">
+        <button class="month-btn">Select</button>
+        <p class="month">February</p>
+      </div>
+
+      <div class="row">
+        <button class="month-btn">Select</button>
+        <p class="month">March</p>
+      </div>
+
+      <div class="row">
+        <button class="month-btn">Select</button>
+        <p class="month">April</p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
