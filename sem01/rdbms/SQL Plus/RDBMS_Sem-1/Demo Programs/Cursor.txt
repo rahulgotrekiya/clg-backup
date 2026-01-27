@@ -1,0 +1,19 @@
+declare
+	cursor c1(vID applicant.aid%type) is select et.et_id, et_name, score from 
+	etest_details etd join entrance_test et on etd.et_id = et.et_id
+	where etd.aid = vID;
+
+	tot number(3);
+	vID applicant.aid%type;
+begin
+   vID := '&ID';
+   dbms_output.put_line(rpad('Id',5,' ') || rpad('Test Name', 10, ' ') || lpad('Score',5,' '));
+   tot := 0;
+   for vCur in c1(vID)
+   loop
+	tot := tot + vCur.score;
+   	dbms_output.put_line(rpad(vCur.et_id, 5 , ' ') || rpad(vCur.et_Name, 10, ' ') || lpad(vCur.score,5,' '));
+   end loop;
+   dbms_output.put_line(lpad(tot, 20, ' '));
+end;
+/

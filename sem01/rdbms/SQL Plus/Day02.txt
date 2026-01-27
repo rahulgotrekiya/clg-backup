@@ -1,0 +1,324 @@
+Create below given table called “Client_Master” with the constrains and insert minimum 5 
+records in it.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1    create table Client_Master(
+  2         C_No Varchar (4) primary key check(C_No like 'C%'),
+  3         Client_Name varchar(25) not null,
+  4         Pincode Number(6) check(length(Pincode) = 6) not null,
+  5         Birth_Date Date not null,
+  6         Occupation varchar(15) not null
+  7*   )
+SQL> /
+
+Table created.
+
+Add the following constraints with the table fields:
+1. Client_No must start with the capital letter ‘C’ only.
+
+	C_No Varchar (4) primary key check(C_No like 'C%'),
+
+2. Pincode must be of exactly 6-digit number. 
+
+	Pincode Number(6) not null, 
+
+3. Sample records are as below
+
+	insert into client_master values ('C001', 'Kajal Oza', 380036, '14-july-1987', 'Manager');
+	insert into client_master values ('C002', 'Vraj Shah', 380058, '20-nov-1986', 'CEO');
+	insert into client_master values ('C003', 'Dhyan Dave', 387903, '17-June-1988', 'Doctor');
+	insert into client_master values ('C004', 'Mira Vaid', 398006, '5-jan-1976', 'Professor');
+	insert into client_master values ('C005', 'Preeti Patel', 390040, '28-feb-1971', 'Clerk');
+
+
+SQL> select * from client_master;
+
+C_NO CLIENT_NAME                  PINCODE BIRTH_DAT OCCUPATION
+---- ------------------------- ---------- --------- ---------------
+C001 Kajal Oza                     380036 14-JUL-87 Manager
+C002 Vraj Shah                     380058 20-NOV-86 CEO
+C003 Dhyan Dave                    387903 17-JUN-88 Doctor
+C004 Mira Vaid                     398006 05-JAN-76 Professor
+C005 Preeti Patel                  390040 28-FEB-71 Clerk
+
+
+============================================================================================
+
+Create following tables with constraints and records as shown in the example below.
+Table: Product_Master
+
+
+create table Product_Master(
+	P_No varchar(4) primary key check(P_No like 'P%'),
+        Descr varchar(25) not null,
+        Profit_Per Number(3) not null,
+        Unit Varchar(25) not null,
+        Qty_Hand Number(11) not null,
+        ReOrder Number(11) not null,
+        Sell_P Number(11) not null,
+        Cost_P Number(11) not null
+)
+/
+
+	insert into product_master values ('P001', 'T-Shirt', 5, 'Piece', 200, 50, 350, 250);
+	insert into product_master values ('P002', 'Jeans', 6, 'Piece', 150, 40, 500, 350);
+	insert into product_master values ('P003', 'Skirt', 6, 'Piece', 100, 50, 350, 200);
+	insert into product_master values ('P004', 'Saree', 3, 'Piece', 100, 20, 800, 600);
+
+
+SQL> select * from product_master;
+
+P_NO DESCR                     PROFIT_PER UNIT                        QTY_HAND    REORDER     SELL_P     COST_P
+---- ------------------------- ---------- ------------------------- ---------- ---------- ----------
+P001 T-Shirt                            5 Piece                            200         50        350        250
+P002 Jeans                              6 Piece                            150         40        500        350
+P003 Skirt                              6 Piece                            100         50        350        200
+P004 Saree                              3 Piece                            100         20        800        600
+
+
+==========================================================================================
+
+Create Table and Insert minimum 10 records in Salesman_Master Table as shown below.
+(Sample data are shown for your reference):
+
+create table Salesman_Master (
+	S_No varchar(4) primary key check(S_No like 'S%'),
+        Name varchar(25) not null,
+        Add1 varchar(25),
+        Add2 Varchar(25),
+        City Varchar(25) not null,
+	Pincode Number(6) check(length(Pincode) = 6),
+        State Varchar(25) not null,
+        Salary Number(11) not null,
+        Target Number(11) not null,
+        Sales Number(11) not null
+);
+
+	insert into Salesman_Master values (
+		'S001',
+		'Aman',
+		'3,Dev Appt', 
+		'Vagh odia', 
+		'Baroda',
+		'',
+		'Gujarat',
+		5000,
+		100,
+		50	
+	);
+
+
+	insert into Salesman_Master values (
+		'S002',
+		'Omkar',
+		'', 
+		'', 
+		'Bhopal',
+		'',
+		'MP',
+		4500,
+		200,
+		150	
+	);
+
+
+	insert into Salesman_Master values (
+		'S003',
+		'Raj',
+		'B-104', 
+		'Verli',
+		'Mumbai',
+		400002,
+		'Maharashtra',
+		5500,
+		200,
+		200	
+	);
+
+
+	insert into Salesman_Master values (
+		'S005',
+		'Ashish',
+		'1,Smruti', 
+		'Ghoddol', 
+		'Surat',
+		'',
+		'Gujarat',
+		4500,
+		150,
+		100	
+	);
+
+
+====================================================================================
+
+Create Sales_Order and Sales_Order_Details table as shown below. Insert minimum 10 
+records in it.
+
+
+create table Sales_Order (
+	Order_No varchar(4) primary key check(Order_No like 'O%'),
+  	Client_No varchar(4) references Client_Master(C_No),
+  	Order_Date date,
+  	Salesman_No varchar(4) references Salesman_Master(S_No),
+	Delivery_Type char(1) check(Delivery_Type IN('F', 'P')),
+	Bill_Paid char(1) check(Bill_Paid in ('Y','N')),
+	Delivery_Date date,
+  	Order_Status varchar(15) check(Order_Status in ('In Process','Pending','Fulfilled'))
+)
+
+
+insert into Sales_Order values ('O001', 'C001', '15-JAN-25', 'S001', 'F', 'Y', '20-JAN-25', 'Fulfilled');
+insert into Sales_Order values ('O002', 'C002', '16-JAN-25', 'S002', 'P', 'N', '25-JAN-25', 'Pending');
+insert into Sales_Order values ('O003', 'C003', '17-JAN-25', 'S003', 'F', 'Y', '22-JAN-25', 'Fulfilled');
+insert into Sales_Order values ('O004', 'C004', '18-JAN-25', 'S004', 'P', 'Y', '28-JAN-25', 'In Process');
+insert into Sales_Order values ('O005', 'C005', '19-JAN-25', 'S005', 'F', 'N', '24-JAN-25', 'Pending');
+insert into Sales_Order values ('O006', 'C001', '20-JAN-25', 'S006', 'P', 'Y', '30-JAN-25', 'Fulfilled');
+insert into Sales_Order values ('O007', 'C002', '21-JAN-25', 'S007', 'F', 'Y', '26-JAN-25', 'In Process');
+insert into Sales_Order values ('O008', 'C003', '22-JAN-25', 'S008', 'P', 'N', '02-FEB-25', 'Pending');
+insert into Sales_Order values ('O009', 'C004', '23-JAN-25', 'S009', 'F', 'Y', '28-JAN-25', 'Fulfilled');
+insert into Sales_Order values ('O010', 'C005', '24-JAN-25', 'S010', 'P', 'Y', '03-FEB-25', 'In Process');
+commit;
+
+create table Sales_Order_Details (
+	Order_No varchar(4) references Sales_Order(Order_No),
+	Product_No varchar(4) references Product_Master(P_No),
+	Qty_Ordered Number(8) check(Qty_Ordered > 0),
+	Qty_Dispatched Number(8) check(Qty_Dispatched >= 0),
+	Product_Rate Number(10,2),
+	primary key (Order_No, Product_No)
+);
+
+
+insert into Sales_Order_Details values ('O001', 'P001', 5, 5, 1750);
+insert into Sales_Order_Details values ('O002', 'P002', 3, 0, 1500);
+insert into Sales_Order_Details values ('O003', 'P003', 2, 2, 700);
+insert into Sales_Order_Details values ('O004', 'P004', 1, 0, 800);
+insert into Sales_Order_Details values ('O005', 'P001', 4, 4, 1400);
+insert into Sales_Order_Details values ('O006', 'P002', 2, 2, 1000);
+insert into Sales_Order_Details values ('O007', 'P003', 6, 4, 2100);
+insert into Sales_Order_Details values ('O008', 'P004', 2, 0, 1600);
+insert into Sales_Order_Details values ('O009', 'P001', 3, 3, 1050);
+insert into Sales_Order_Details values ('O010', 'P002', 4, 2, 2000);
+
+==========================================================================
+
+
+Create following tables with constraints given below. Also enter minimum 5 records in
+Entrance_Test table and 10 records in each of other two tables:
+
+APPLICANT (AID, A_Name, Address, B_Date)
+ENTRANCE_TEST (ET_ID, ET_Name, Max_Score)
+ETEST_DETAILS (AID, ETID, ETest_Date, Score)
+
+create table APPLICANT (
+	AID varchar(4) primary key check(AID like 'A%'),
+	A_Name varchar(25) not null,
+	Address varchar(50),
+	B_Date date not null 
+);
+
+
+create table ENTRANCE_TEST (
+	ET_ID varchar(4) primary key check(ET_ID like 'T%'),
+	ET_Name varchar(30) not null,
+	Max_Score number(3) check(Max_Score <= 100)
+);
+
+create table ETEST_DETAILS (
+	AID varchar(4) references APPLICANT(AID),
+	ETID varchar(4) references ENTRANCE_TEST(ET_ID),
+	ETest_Date date not null,
+	Score number(3) not null,
+	primary key (AID, ETID)
+);
+
+	- AID: Applicant ID must start with a letter ‘A’ and should be of length 4, It will be the foreign key for ETEST_DETAILS Table
+	- Max Score of any exam must not be greater than 100
+	- ET_ID is the entrance test ID, starts with ‘T’ and is length of 4, referred as Foreign Key for ETEST_DETAILS Table
+
+
+insert into ENTRANCE_TEST values ('T001', 'JEE Main', 100);
+insert into ENTRANCE_TEST values ('T002', 'NEET', 100);
+insert into ENTRANCE_TEST values ('T003', 'GATE', 100);
+insert into ENTRANCE_TEST values ('T004', 'CAT', 100);
+insert into ENTRANCE_TEST values ('T005', 'CLAT', 100);
+insert into APPLICANT values ('A001', 'Ravi Kumar', '123 MG Road, Delhi', '15-MAR-2000');
+insert into APPLICANT values ('A002', 'Priya Sharma', '456 Park Street, Mumbai', '22-JUL-1999');
+insert into APPLICANT values ('A003', 'Amit Patel', '789 SG Highway, Ahmedabad', '10-NOV-2001');
+insert into APPLICANT values ('A004', 'Sneha Gupta', '321 Brigade Road, Bangalore', '05-SEP-2000');
+insert into APPLICANT values ('A005', 'Rohit Singh', '654 Civil Lines, Lucknow', '18-DEC-1998');
+insert into APPLICANT values ('A006', 'Kavya Reddy', '987 Banjara Hills, Hyderabad', '25-APR-2001');
+insert into APPLICANT values ('A007', 'Arjun Nair', '147 MG Road, Kochi', '12-JUN-2000');
+insert into APPLICANT values ('A008', 'Pooja Jain', '258 MI Road, Jaipur', '30-AUG-1999');
+insert into APPLICANT values ('A009', 'Vikash Yadav', '369 Hazratganj, Lucknow', '07-FEB-2001');
+insert into APPLICANT values ('A010', 'Ananya Das', '741 Park Circus, Kolkata', '14-OCT-2000');
+insert into ETEST_DETAILS values ('A001', 'T001', '15-MAY-24', 85);
+insert into ETEST_DETAILS values ('A002', 'T002', '20-MAY-24', 92);
+insert into ETEST_DETAILS values ('A003', 'T003', '25-MAY-24', 78);
+insert into ETEST_DETAILS values ('A004', 'T004', '30-MAY-24', 88);
+insert into ETEST_DETAILS values ('A005', 'T005', '05-JUN-24', 75);
+insert into ETEST_DETAILS values ('A006', 'T001', '10-JUN-24', 90);
+insert into ETEST_DETAILS values ('A007', 'T002', '15-JUN-24', 82);
+insert into ETEST_DETAILS values ('A008', 'T003', '20-JUN-24', 95);
+insert into ETEST_DETAILS values ('A009', 'T004', '25-JUN-24', 87);
+insert into ETEST_DETAILS values ('A010', 'T005', '30-JUN-24', 79);
+
+===========================================================================================================================
+
+Create following tables with constraints given below. Also enter minimum 5 records in Distributor table and Item table. Enter 10 records in Dist_Item table.
+
+Distributor (Dno, DName, City, Phone)
+Item (Item_No, Item_Name, Price, Weight)
+Dist_Item (Dno, Item_No, Qty, Date)
+
+create table Distributor (
+	Dno varchar(4) primary key check(Dno like 'D%'),
+	DName varchar(25) not null, 
+	City varchar(25) not null, 
+	Phone varchar(10)
+);
+
+create table Item (
+	Item_No varchar(5) primary key check(Item_No like 'I%'),
+	Item_Name varchar(20) not null,
+	Price number(8, 2) check(Price > 0) not null,
+	Weight number(8, 2) check(Weight > 0) not null
+);
+
+create table Dist_Item (
+	Dno varchar(4) references Distributor(Dno),
+	Item_No varchar(5) references Item(Item_No),
+	Qty number(9) check(Qty > 0) not null,
+	Date_Supplied date not null,
+	primary key (Dno, Item_No)
+);
+
+- Dno is the PK and referred as FK for 3rd table
+- Item_No starts with ‘I’ and maximum length of 5
+- Price, weight, Qty (quantity) must be greater than 0 and not null.
+
+
+
+insert into Distributor values ('D001', 'ABC Distributors', 'Delhi', '9876543210');
+insert into Distributor values ('D002', 'XYZ Suppliers', 'Mumbai', '9876543211');
+insert into Distributor values ('D003', 'PQR Trading', 'Chennai', '9876543212');
+insert into Distributor values ('D004', 'LMN Enterprises', 'Kolkata', '9876543213');
+insert into Distributor values ('D005', 'RST Corporation', 'Bangalore', '9876543214');
+insert into Item values ('I001', 'Rice', 45.50, 1.00);
+insert into Item values ('I002', 'Wheat', 35.75, 1.00);
+insert into Item values ('I003', 'Sugar', 42.25, 1.00);
+insert into Item values ('I004', 'Oil', 120.00, 1.00);
+insert into Item values ('I005', 'Salt', 20.00, 1.00);
+insert into Dist_Item values ('D001', 'I001', 100, '15-JAN-25');
+insert into Dist_Item values ('D001', 'I002', 150, '16-JAN-25');
+insert into Dist_Item values ('D002', 'I003', 200, '17-JAN-25');
+insert into Dist_Item values ('D002', 'I004', 75, '18-JAN-25');
+insert into Dist_Item values ('D003', 'I005', 300, '19-JAN-25');
+insert into Dist_Item values ('D003', 'I001', 120, '20-JAN-25');
+insert into Dist_Item values ('D004', 'I002', 180, '21-JAN-25');
+insert into Dist_Item values ('D004', 'I003', 90, '22-JAN-25');
+insert into Dist_Item values ('D005', 'I004', 60, '23-JAN-25');
+insert into Dist_Item values ('D005', 'I005', 250, '24-JAN-25');

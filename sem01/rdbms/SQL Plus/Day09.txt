@@ -1,0 +1,113 @@
+Set Operation: 
+UNION, UNION ALL, INTERSECTION, MINUS clause 
+
+Exercise 
+Use the following tables and solve below given queries. 
+Worker (Id, Name, Wages_Per_Hr) 
+Job (Job_Id, Job_Type) 
+Assigned (W_Id, J_Id, Start_Date, Status, Total_Hrs) 
+
+1. Display all the workers’ Id assigned for Job 1 and 2 both (J_Id =1 and J_Id=2) 
+
+SELECT W_Id FROM Assigned WHERE J_Id = 'J1'
+UNION
+SELECT W_Id FROM Assigned WHERE J_Id = 'J2';
+
+2. List the workers who are working for J_Id =1 and not for J_Id = 2 
+
+SELECT W_Id FROM Assigned WHERE J_Id = 'J1'
+MINUS
+SELECT W_Id FROM Assigned WHERE J_Id = 'J2';
+
+3. Display the workers Id who are working for more than 6 hours and status is pending. And Union them all with the worker’s Id who are working for less than 6 hours and status is completed
+
+SELECT W_Id FROM Assigned WHERE Total_Hrs > 6 AND  Status = 'P'
+UNION
+SELECT W_Id FROM Assigned WHERE Total_Hrs < 6 AND  Status = 'C';
+
+Use following tables to solve below given queries. 
+FYRankers (Enrol_No, Name, SPI) 
+SYRankers (Enrol_No, Name, SPI) 
+
+1. Display the name of the student who is ranker in ‘FY’ or ‘SY’ 
+
+SELECT Name FROM FYRankers
+UNION
+SELECT Name FROM SYRankers;
+
+
+2. Display the name of the student who is ranker in ‘FY’ or ‘SY’ including duplicate data 
+
+SELECT Name FROM FYRankers
+UNION ALL
+SELECT Name FROM SYRankers;
+
+3. Display the name of the students who is ranker in ‘FY’ or ‘SY’ and having SPI more than 7 
+
+SELECT Name FROM FYRankers WHERE SPI > 7
+UNION 
+SELECT Name FROM SYRankers WHERE SPI > 7;
+
+4. Display the name of the student who is ranker in both FY and SY 
+
+SELECT Name FROM FYRankers 
+INTERSECT 
+SELECT Name FROM SYRankers;
+
+5. Display the name of the student who is ranker in FY but not in SY 
+
+SELECT Name FROM FYRankers 
+MINUS
+SELECT Name FROM SYRankers;
+
+6. Display the name of the student who is ranker in SY but not in FY
+
+SELECT Name FROM SYRankers 
+MINUS
+SELECT Name FROM FYRankers;
+
+Use the following tables and solve below given queries. 
+customer (cust_id, name, city, country) 
+supplier (supp_id, name, city, country, cust_id) 
+
+INSERT INTO  cust VALUES(1, 'Ankit', 'Ahemdabad', 'India');
+INSERT INTO  cust VALUES(2, 'Ravi', 'Mumbai', 'India');
+INSERT INTO  cust VALUES(3, 'Priya', 'Delhi', 'India');
+INSERT INTO  cust VALUES(4, 'Rahul', 'Ahemdabad', 'India');
+
+
+INSERT INTO supplier VALUES(1, 'Arun', 'Ahemdabad', 'India', 1);
+INSERT INTO supplier VALUES(2, 'Sheha', 'Pune', 'India', 2);
+INSERT INTO supplier VALUES(3, 'Kiran', 'Mumbai', 'India', 4);
+INSERT INTO supplier VALUES(4, 'Pako', 'Ahemdabad', 'India', 1);
+
+
+1. Display distinct city of both the customer and supplier table in sorted order. 
+
+SELECT city FROM cust
+UNION
+SELECT city FROM supplier
+ORDER BY city;
+
+2. Display city of both the tables with duplicate data. 
+
+SELECT city FROM cust
+UNION ALL
+SELECT city FROM supplier
+ORDER BY city;
+
+3. Display the details of Ahmedabad city of both customer and supplier table. 
+
+SELECT * FROM CUST WHERE city = 'Ahemdabad'
+UNION 
+SELECT supp_id, Name, city, country FROM supplier WHERE city = 'Ahemdabad';
+
+4. Display customer details who are living in ‘ahmedabad’ and name start with ‘A’. 
+
+SELECT * FROM cust WHERE city = 'Ahemdabad' AND Name LIKE 'A%';
+
+6. Find the details of the supplier who are not customer.
+
+SELECT * FROM supplier WHERE supp_id NOT IN (
+    SELECT cust_id FROM CUST
+);

@@ -1,0 +1,126 @@
+1. ROW LEVEL TRIGGER (Before Insert)
+
+CREATE OR REPLACE TRIGGER trg_applicant_default_city
+BEFORE INSERT ON applicant
+FOR EACH ROW
+BEGIN
+    IF :NEW.city IS NULL THEN
+        :NEW.city := 'Ahmedabad';
+    END IF;
+END;
+/
+
+
+2. Statement-Level Trigger (AFTER INSERT)
+
+CREATE OR REPLACE TRIGGER trg_applicant_insert_count
+AFTER INSERT ON applicant
+BEGIN
+    dbms_output.put_line('Applicants inserted successfully!');
+END;
+/
+
+
+3. Logging Trigger (AFTER INSERT on applicant)
+
+CREATE TABLE activity_log(
+    log_id NUMBER GENERATED ALWAYS AS IDENTITY,
+    table_name VARCHAR2(20),
+    operation VARCHAR2(20),
+    old_value VARCHAR2(200),
+    new_value VARCHAR2(200),
+    log_time DATE DEFAULT SYSDATE
+);
+
+CREATE OR REPLACE TRIGGER trg_log_applicant_insert
+AFTER INSERT ON applicant
+FOR EACH ROW
+BEGIN
+    INSERT INTO activity_log(table_name, operation, new_value)
+    VALUES(
+        'APPLICANT',
+        'INSERT',
+        'AID=' || :NEW.aid || ', Name=' || :NEW.a_name ||
+        ', City=' || :NEW.city
+    );
+END;
+/
+
+4. UPDATE Trigger using OLD and NEW values
+
+CREATE OR REPLACE TRIGGER trg_applicant_city_change
+AFTER UPDATE OF city ON applicant
+FOR EACH ROW
+BEGIN
+    INSERT INTO activity_log(table_name, operation, old_value, new_value)
+    VALUES(
+        'APPLICANT',
+        'CITY UPDATE',
+        'Old City=' || :OLD.city,
+        'New City=' || :NEW.city
+    );
+END;
+/
+
+
+5. BEFORE INSERT Trigger on etest_details (Validating Score)
+
+CREATE OR REPLACE TRIGGER trg_score_validation
+BEFORE INSERT ON etest_details
+FOR EACH ROW
+DECLARE
+    v_max NUMBER;
+BEGIN
+    SELECT max_score INTO v_max
+    FROM entrance_test
+    WHERE et_id = :NEW.et_id;
+
+    IF :NEW.score > v_max THEN
+        RAISE_APPLICATION_ERROR(-20001,
+            'Score cannot exceed the maximum allowed score (' || v_max || ').');
+    else
+	dbms_output.put_line('Record Inserted successfully...');
+    END IF;
+END;
+/
+
+6. AFTER DELETE Trigger
+
+CREATE OR REPLACE TRIGGER trg_log_applicant_delete
+AFTER DELETE ON applicant
+FOR EACH ROW
+BEGIN
+    INSERT INTO activity_log(table_name, operation, old_value)
+    VALUES(
+        'APPLICANT',
+        'DELETE',
+        'AID=' || :OLD.aid || ', Name=' || :OLD.a_name
+    );
+END;
+/
+
+7. Mutating Table Scenario (Safe Example)
+
+ALTER TABLE applicant ADD total_tests NUMBER DEFAULT 0;
+
+CREATE OR REPLACE TRIGGER trg_test_count
+AFTER INSERT ON etest_details
+FOR EACH ROW
+BEGIN
+    UPDATE applicant
+    SET total_tests = total_tests + 1
+    WHERE aid = :NEW.aid;
+END;
+/
+
+8. Trigger to Automatically Set Test Date
+
+CREATE OR REPLACE TRIGGER trg_default_testdate
+BEFORE INSERT ON etest_details
+FOR EACH ROW
+BEGIN
+    IF :NEW.eTest_Date IS NULL THEN
+        :NEW.eTest_Date := SYSDATE;
+    END IF;
+END;
+/

@@ -1,0 +1,242 @@
+// Create Database 
+
+use Rahul
+
+db.createCollection("Rahul")
+
+db.Rahul.insert(
+    {
+        _id: 1,
+        name: "Rahul",
+        age: 21,
+        dob: "26 March",
+        div: "A",
+        address: "Savvy Strata"
+    }
+)
+
+WriteResult({ "nInserted" : 1 })   
+
+db.Rahul.insertMany([
+    {
+        _id: 2,
+        name: "Darshan",
+        age: 22,
+        dob: "25 March",
+        div: "A",
+        address: "Bihar"
+    },
+    {
+        _id: 3,
+        name: "Kartik",
+        age: 22,
+        dob: "26 Jan",
+        div: "A",
+        address: "Bharti Ashram"
+    },
+    {
+        _id: 4,
+        name: "Raj",
+        age: 20,
+        dob: "26 Jul",
+        div: "A",
+        address: "LDRP"
+    },
+    {
+        _id: 5,
+        name: "Nikhil",
+        age: 21,
+        dob: "26 Aug",
+        div: "A",
+        address: "Gandhinagar"
+    }
+])
+
+{ "acknowledged" : true, "insertedIds" : [ 2, 3, 4, 5 ] }     
+
+> db.Rahul.find()                                                                                               { "_id" : 2, "name" : "Darshan", "age" : 22, "dob" : "25 March", "div" : "A", "address" : "Bihar" }             
+{ "_id" : 3, "name" : "Kartik", "age" : 22, "dob" : "26 Jan", "div" : "A", "address" : "Bharti Ashram" }        
+{ "_id" : 4, "name" : "Raj", "age" : 20, "dob" : "26 Jul", "div" : "A", "address" : "LDRP" }                    
+{ "_id" : 5, "name" : "Nikhil", "age" : 21, "dob" : "26 Aug", "div" : "A", "address" : "Gandhinagar" }          
+{ "_id" : 1, "name" : "Rahul", "age" : 21, "dob" : "26 March", "div" : "A", "address" : "Savvy Strata" }       
+
+==================================================
+
+use TEACHER
+
+db.createCollection("TEACHER_MASTER")
+
+db.TEACHER_MASTER.insertMany([
+    {   
+        _id: 1,
+        Name: "Rahul",
+        Age: 21,
+        Subject: [
+            "English", "Hindi", "Gujarati"
+        ],
+        DOB: "26 March 2005",
+        Gender: "male",
+        Salary: 100000,
+        City: "Ahemdabad"
+    },
+    {   
+        _id: 2,
+        Name: "Anil",
+        Age: 34,
+        Subject: [
+            "Hindi"
+        ],
+        DOB: "1 January 1981",
+        Gender: "male",
+        Salary: 100000,
+        City: "Ahemdabad"
+    },
+    {   
+        _id: 3,
+        Name: "Priyanka",
+        Age: 25,
+        Subject: [
+            "Hindi", "English"
+        ],
+        DOB: "25 May 1999",
+        Gender: "female",
+        Salary: 40000,
+        City: "Ahemdabad"
+    },
+    {   
+        _id: 4,
+        Name: "Darshan",
+        Age: 25,
+        Subject: [
+            "Hindi"
+        ],
+        DOB: "23 January 2000",
+        Gender: "male",
+        Salary: 40000,
+        City: "Botad"
+    },
+    {   
+        _id: 5,
+        Name: "Kartik",
+        Age: 40,
+        Subject: [
+            "English"
+        ],
+        DOB: "23 March 1975",
+        Gender: "male",
+        Salary: 20000,
+        City: "Bihar"
+    },
+    {   
+        _id: 6,
+        Name: "Sachin",
+        Age: 24,
+        Subject: [
+            "PHP", "JavaScript"
+        ],
+        DOB: "23 January 2001",
+        Gender: "male",
+        Salary: 120000,
+        City: "Bhavnagar"
+    },
+    {   
+        _id: 7,
+        Name: "Mahesh",
+        Age: 35,
+        Subject: [
+            "MongoDB", "OS"
+        ],
+        DOB: "25 May 1980",
+        Gender: "male",
+        Salary: 40000,
+        City: "Dhrangadhra"
+    },
+    {   
+        _id: 8,
+        Name: "Mahila",
+        Age: 35,
+        Subject: [
+            "OS", "Gujarati"
+        ],
+        DOB: "25 May 1980",
+        Gender: "male",
+        Salary: 40000,
+        City: "Dhrangadhra"
+    }
+])
+
+> db.TEACHER_MASTER.find()
+{ "_id" : 1, "Name" : "Rahul", "Age" : 21, "Subject" : [ "English", "Hindi", "Gujarati" ], "DOB" : "26 March 2005", "Gender" : "male", "Salary" : 100000, "City" : "Ahemdabad" }
+{ "_id" : 2, "Name" : "Anil", "Age" : 34, "Subject" : [ "Hindi" ], "DOB" : "1 January 1981", "Gender" : "male", "Salary" : 100000, "City" : "Ahemdabad" }                                                                       
+{ "_id" : 3, "Name" : "Priyanka", "Age" : 25, "Subject" : [ "Hindi", "English" ], "DOB" : "25 May 1999", "Gender" : "female", "Salary" : 40000, "City" : "Ahemdabad" }
+{ "_id" : 4, "Name" : "Darshan", "Age" : 25, "Subject" : [ "Hindi" ], "DOB" : "23 January 2000", "Gender" : "male", "Salary" : 40000, "City" : "Botad" }
+{ "_id" : 5, "Name" : "Kartik", "Age" : 40, "Subject" : [ "English" ], "DOB" : "23 March 1975", "Gender" : "male", "Salary" : 20000, "City" : "Bihar" }
+{ "_id" : 6, "Name" : "Sachin", "Age" : 24, "Subject" : [ "PHP", "JavaScript" ], "DOB" : "23 January 2001", "Gender" : "male", "Salary" : 120000, "City" : "Bhavnagar" }
+{ "_id" : 7, "Name" : "Mahesh", "Age" : 35, "Subject" : [ "MongoDB", "OS" ], "DOB" : "25 May 1980", "Gender" : "male", "Salary" : 40000, "City" : "Dhrangadhra" }
+
+--------------------------------------------
+
+db.TEACHER_MASTER.find("_id")
+
+> db.TEACHER_MASTER.find({}, {Name: 1, Subject: 1, Gender: 1, Salary: 1, _id:0})                                                      { "Name" : "Rahul", "Subject" : [ "English", "Hindi", "Gujarati" ], "Gender" : "male", "Salary" : 100000 }                            { "Name" : "Anil", "Subject" : [ "Hindi" ], "Gender" : "male", "Salary" : 100000 }                                                    { "Name" : "Priyanka", "Subject" : [ "Hindi", "English" ], "Gender" : "female", "Salary" : 40000 }                                    { "Name" : "Darshan", "Subject" : [ "Hindi" ], "Gender" : "male", "Salary" : 40000 }                                                  { "Name" : "Kartik", "Subject" : [ "English" ], "Gender" : "male", "Salary" : 20000 }                                                 { "Name" : "Sachin", "Subject" : [ "PHP", "JavaScript" ], "Gender" : "male", "Salary" : 120000 }                                      { "Name" : "Mahesh", "Subject" : [ "MongoDB", "OS" ], "Gender" : "male", "Salary" : 40000 }    
+
+--------------------------------------------
+
+db.TEACHER_MASTER.find({City: "Ahemdabad"}).pretty()
+
+db.TEACHER_MASTER.find({City: "Ahemdabad"}, {Name:1, City: 1}).pretty()
+
+
+
+======================================================
+
+use EMPLOYEE
+
+db.createCollection("EMPLOYEE_MASTER")
+
+db.EMPLOYEE_MASTER.insertMany([
+    {   
+        _id: 1,
+        Empno: "E01"
+        Name: "Rahul",
+        Designations: "Engineer",
+        DOJ: "26 March 2005",
+        Department: "HR",
+        Salary: 100000,
+        Gender: "male",
+        Skills: ["JavaScript", "PHP", "Git/GitHub"]
+    },   
+    {   
+        _id: 2,
+        Empno: "E02"
+        Name: "Priyanka",
+        Designations: "Engineer",
+        DOJ: "25 May 2000",
+        Department: "HR",
+        Salary: 120000,
+        Gender: "female",
+        Skills: ["JavaScript", "WordPress"]
+    },
+    {   
+        _id: 3,
+        Empno: "E03"
+        Name: "Raj",
+        Designations: "Engineer",
+        DOJ: "1 December 1998",
+        Department: "HR",
+        Salary: 20000,
+        Gender: "Male",
+        Skills: ["Java", "PHP"]
+    },
+    {   
+        _id: 4,
+        Empno: "E04"
+        Name: "Raj",
+        Designations: "Engineer",
+        DOJ: "1 December 1998",
+        Department: "HR",
+        Salary: 20000,
+        Gender: "Male",
+        Skills: ["Java", "PHP"]
+    },
+])
