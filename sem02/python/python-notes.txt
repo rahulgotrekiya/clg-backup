@@ -1,0 +1,10 @@
+# python notes
+
+## destroy
+> It hides the new window for which it is called.
+
+## withdraw
+> It withdraws the focus from the window for which we have called.
+
+## deiconify
+> It reversed the action of withdraw.

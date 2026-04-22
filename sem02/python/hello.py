@@ -78,3 +78,14 @@ print(type(temp))
 # else:
 #    print(num, "is not palandrome")
 
+
+
+def is_prime(n):
+   if n < 2:
+      return False
+   for i in range(2, n):
+      if i % n == 0:
+         return False
+   return True
+
+print(is_prime(2))

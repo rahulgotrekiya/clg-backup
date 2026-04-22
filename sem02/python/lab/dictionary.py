@@ -57,12 +57,8 @@ for i in students:
         s=s+j
     print("total of student", i, "is", s)
 
-
-
-
-
-
-
-
-
+print(k[1])[1])
+    
+print(k[1]["Salary"])
+print(k[1]["name"])
 
