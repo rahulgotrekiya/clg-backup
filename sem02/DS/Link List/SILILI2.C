@@ -6,7 +6,7 @@ struct node {
 	struct node * next;
 };
 
-struct node *head=0, *temp;
+struct node *head=0, *temp, *n, *cn, *pn, *nn;
 struct node *head2=0, *temp2;
 
 void Menu(){
@@ -17,6 +17,8 @@ void Menu(){
 	printf("\n4. Merge Nodes");
 	printf("\n5. Merge Nodes (Using Reccursion)");
 	printf("\n6. Copy Node");
+	printf("\n7. Sort Linked List");
+	printf("\n8. Reverse");
 	printf("\n0. Exit");
 }
 
@@ -26,6 +28,8 @@ void traversal(int nodeNo);
 void mergeNodes();
 void mergeRecc(struct node *a, struct node *b);
 void copyNode();
+void sort();
+void reverse();
 
 void main() {
 	int ch, val, pos, nodeNo;
@@ -66,6 +70,13 @@ void main() {
 			case 6:
 				copyNode();
 				break;
+			case 7:
+				sort();
+				traversal(1);
+				break;
+			case 8:
+				reverse();
+				break;
 			case 0:
 				exit(1);
 				break;
@@ -74,6 +85,37 @@ void main() {
 		}
 		getch();
 	} while(1);
+}
+
+void reverse(){
+	pn=0;
+	cn=nn=head;
+	while(nn!=0){
+		nn = nn->next;
+		cn->next = pn;
+		pn=cn;
+		cn=nn;
+	}
+	head=pn;
+	traversal(1);
+}
+
+void sort(){
+	int swap;
+	temp = head;
+	while(temp!=0){
+		n=temp;
+		while(n!=0){
+			if(n->data < temp->data){
+				swap=n->data;
+				n->data = temp->data;
+				temp->data=swap;
+			}
+			n = n->next;
+		}
+		temp=temp->next;
+	}
+
 }
 
 void mergeRecc(struct node *a, struct node *b){

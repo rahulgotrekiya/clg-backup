@@ -87,7 +87,7 @@ void main() {
 			case 8:
 				printf("\nEnter Pos:");
 				scanf("%d", &pos);
-				deleteAtLast(pos);
+				deleteAtPosition(pos);
 				break;
 			case 9:
 				printEvenData();
@@ -135,12 +135,19 @@ void createLinkedList(int data){
 }
 
 void insertAtFirst(int val){
-	struct node * newnode;
-	newnode = (struct node*) malloc(sizeof(struct node));
-	newnode->data = val;
+	if(head==0){
+		createLinkedList(val);
+	}
+	else {
+		struct node * newnode;
+		newnode = (struct node*) malloc(sizeof(struct node));
+		newnode->data = val;
 
-	newnode->next = head;
-	head = newnode;
+		newnode->next = head;
+		head = newnode;
+		printf("\nInserted  First...");
+	}
+
 }
 
 void insertAtLast(int val){
@@ -154,6 +161,7 @@ void insertAtLast(int val){
 	}
 
 	temp -> next = newnode;
+	temp=newnode;
 }
 
 void insertAtPos(int val, int pos){
